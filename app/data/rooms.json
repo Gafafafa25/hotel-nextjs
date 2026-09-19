@@ -6,7 +6,7 @@
     "price": 3500,
     "maxGuests": 2,
     "amenities": ["Wi-Fi", "TV", "Conditioner"],
-    "image": "/images/standard.jpg",
+    "image": "/images/rooms/standard.jpg",
     "bookedDates": [
       { "checkIn": "2026-09-05", "checkOut": "2026-09-08" },
       { "checkIn": "2026-09-15", "checkOut": "2026-09-20" }
@@ -14,24 +14,24 @@
   },
   {
     "id": 2,
-    "name": "Deluxe",
+    "name": "deluxe",
     "description": "A spacious room with a sea view.",
     "price": 6500,
     "maxGuests": 3,
     "amenities": ["Wi-Fi", "TV", "Mini‑bar", "Safe"],
-    "image": "/images/deluxe.jpg",
+    "image": "/images/rooms/deluxe.jpg",
     "bookedDates": [
       { "checkIn": "2026-09-10", "checkOut": "2026-09-14" }
     ]
   },
   {
     "id": 3,
-    "name": "Family Suite",
+    "name": "family",
     "description": "Two rooms, perfect for a family.",
     "price": 9000,
     "maxGuests": 5,
     "amenities": ["Wi‑Fi", "TV", "Kitchen", "Washing machine"],
-    "image": "/images/family.jpg",
+    "image": "/images/rooms/family.jpg",
     "bookedDates": []
   }
 ]

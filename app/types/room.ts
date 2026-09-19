@@ -3,6 +3,8 @@ export type BookedDateRange = {
     checkOut: string;
 }
 
+export type RoomType = 'standard' | 'deluxe' | 'family';
+
 export type Room = {
     id: number;
     name: string;
