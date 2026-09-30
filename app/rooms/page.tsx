@@ -1,10 +1,11 @@
-'use client'
+// 'use client'
 
 import {Metadata} from "next";
 import {RoomCard} from "@/app/components/RoomCard";
 import {RoomType, Room} from "@/app/types/room";
 import roomsData from "@/app/data/rooms.json";
 import * as React from 'react';
+import {getRooms} from "@/app/lib/rooms";
 
 
 // export const metadata: Metadata = {
@@ -12,12 +13,14 @@ import * as React from 'react';
 //     description: 'Rooms page',
 // };
 
-export default function RoomsPage() {
-    const [filterType, setFilterType] = React.useState<RoomType | ''>('')
+export default async function RoomsPage() {
+    // const [filterType, setFilterType] = React.useState<RoomType | ''>('')
     //todo: filter
+    const filteredRooms = await getRooms()
 
-    const filteredRooms = filterType === '' ?
-        roomsData : roomsData.filter(room => room.name === filterType)
+    // const filteredRooms = filterType === '' ?
+    //     roomsData : roomsData.filter(room => room.name === filterType)
+
 
     return (
         <main className="max-w-7xl mx-auto px-4 py-8">
