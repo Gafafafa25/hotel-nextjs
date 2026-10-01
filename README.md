@@ -49,7 +49,7 @@ more details.
 ### Steps:
 
 - run docker container and create db
-- create tables: rooms(test), 
+- create tables: rooms(test), staff_users, staff_sessions
 
 ```sql
 CREATE TABLE public.rooms (
@@ -97,3 +97,23 @@ ARRAY['Wi-Fi', 'TV', 'Kitchen', 'Washing machine'],
 '/images/rooms/family.jpg')
 ```
 
+```sql
+CREATE TABLE public.staff_users (
+id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+login text NOT NULL,
+password text NOT NULL,
+role text NOT NULL 
+    CHECK (role IN ('admin', 'manager', 'intern')),
+is_active boolean NOT NULL DEFAULT true,
+created_at timestamptz NOT NULL DEFAULT NOW()
+)
+```
+
+```sql
+CREATE TABLE public.staff_sessions (
+token_hash text PRIMARY KEY,
+user_id BIGINT NOT NULL REFERENCES staff_users ON DELETE CASCADE,
+expires_at timestamptz NOT NULL,
+created_at timestamptz NOT NULL DEFAULT NOW()
+)
+```
