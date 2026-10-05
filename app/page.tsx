@@ -8,10 +8,9 @@ export const metadata: Metadata = {
 
 export default function MainPage() {
   return (
-      <div className="">
+      <div >
           <SearchForm />
-        <h1 className="">Main</h1>
-        <p className="">Main page</p>
+
       </div>
 
   );

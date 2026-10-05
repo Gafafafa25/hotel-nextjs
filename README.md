@@ -117,3 +117,33 @@ expires_at timestamptz NOT NULL,
 created_at timestamptz NOT NULL DEFAULT NOW()
 )
 ```
+
+```sql
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+```
+
+```sql
+INSERT INTO staff_users (login, password, role)
+VALUES (
+    'admin',
+     crypt('admin', gen_salt('bf')),
+     'admin'
+)
+```
+```sql
+INSERT INTO staff_users (login, password, role)
+VALUES (
+    'manager',
+     crypt('manager', gen_salt('bf')),
+     'manager'
+)
+```
+
+```sql
+INSERT INTO staff_users (login, password, role)
+VALUES (
+    'intern',
+     crypt('intern', gen_salt('bf')),
+     'intern'
+)
+```

@@ -2,9 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import {siteConfig} from "@/config/site.config";
 import {layoutConfig} from "@/config/layout.config";
+import {getCurrentAdmin} from "@/app/lib/admin-auth";
+import LogoutButton from "@/app/components/LogoutButton";
 
 
-export default function Header() {
+export default async function Header() {
+    const admin = await getCurrentAdmin()
+
     const getNavItems = () => {
         return siteConfig.navItems.map((item) => {
             return <Link key={item.href}
@@ -26,6 +30,8 @@ export default function Header() {
                 <nav className="hidden md:flex space-x-8"
                      style={{height: `h-[${layoutConfig.headerHeight}]`}}>
                     {getNavItems()}
+
+                    {admin && (<LogoutButton/>)}
                 </nav>
             </div>
         </header>
