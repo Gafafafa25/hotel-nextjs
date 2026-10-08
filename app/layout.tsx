@@ -29,9 +29,11 @@ export default function RootLayout({children}: LayoutProps<"/">) {
         >
         <body className="min-h-full flex flex-col">
         <Header/>
-        <main className={`flex flex-col w-full justify-between items-center`}
-        style={{height: `h-[calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})]`}}>
-        {children}
+        <main
+            className={`flex flex-col w-full justify-between items-center`}
+            style={{height: `h-[calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})]`}}
+        >
+            {children}
         </main>
         <Footer/>
         </body>

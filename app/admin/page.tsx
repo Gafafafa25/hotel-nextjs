@@ -11,6 +11,6 @@ export default async function AdminPage() {
         return <LoginForm/>
     }
     return (
-        <AdminPanel/>
+        <AdminPanel login={admin.login} role={admin.role}/>
     )
 }

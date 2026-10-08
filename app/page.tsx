@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function MainPage() {
   return (
-      <div >
+      <div>
           <SearchForm />
 
       </div>
