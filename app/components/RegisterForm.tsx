@@ -27,8 +27,6 @@ export default function RegisterForm() {
         })
         const data = await response.json()
 
-        console.log(data, "data")
-
 
         if (!data.ok) {
             setMessage("Register error")

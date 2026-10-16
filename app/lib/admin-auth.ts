@@ -22,7 +22,8 @@ function hashToken(token: string): string {
 export async function createUser(login: string, password: string, role: string) {
     const result = await pool.query<AdminRow>(
         'INSERT INTO staff_users (login, password, role) ' +
-        'VALUES ($1, crypt($2, gen_salt(\'bf\')), $3)', [login, password, role]
+        'VALUES ($1, crypt($2, gen_salt(\'bf\')), $3) ' +
+        'RETURNING id, login, role', [login, password, role]
     )
     return result.rows[0]
 }

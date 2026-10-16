@@ -7,13 +7,13 @@ export type RoomType = 'standard' | 'deluxe' | 'family';
 
 export type Room = {
     id: number;
+    room_number: string;
     name: string;
     description: string;
     price: number;
     maxGuests: number;
-    amenities: string[];
     image: string;
-    bookedDates: BookedDateRange[];
+    amenities: string[];
 }
 
 export type SearchParams = {

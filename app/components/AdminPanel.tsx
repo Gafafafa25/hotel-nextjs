@@ -1,7 +1,7 @@
 import AdminAccess from "@/app/components/AdminAccess";
 import {getCurrentAdmin} from "@/app/lib/admin-auth";
 
-export default function AdminPanel({login, role}: { login: string,  role : string}) {
+export default function AdminPanel({login, role}: { login: string, role: string }) {
 
     return (
         <main>
@@ -10,9 +10,9 @@ export default function AdminPanel({login, role}: { login: string,  role : strin
                 <div className="mb-6">
                     <p className="text-2xl font-bold mb-8 text-gray-900">Hello, {login}! Access: {role}</p>
                 </div>
-                <div >
+                <div>
                     {role === "admin" && (
-                        <AdminAccess />
+                        <AdminAccess/>
                     )}
                 </div>
             </section>

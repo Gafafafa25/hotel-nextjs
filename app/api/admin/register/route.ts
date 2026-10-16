@@ -21,10 +21,8 @@ export async function POST(request: Request) {
     }
 
     const user = await createUser(body.login, body.password, body.role)
-    // console.log(user, "user")
-    console.log(body.login, body.password, body.role, "user")
     if (!user) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error5"})
     }
-    return NextResponse.json({login: user.login, role: user.role, ok: true})
+    return NextResponse.json({ login: user.login, role: user.role, ok: true})
 }

@@ -1,16 +1,23 @@
-'use client'
+"use client"
 
-import {useEffect, useState} from 'react'
+import {FormEvent, useEffect, useState} from 'react'
 import {getTodayString} from "@/app/lib/search";
-import {makeGetServerInsertedHTML} from "next/dist/server/app-render/make-get-server-inserted-html";
+import {useRouter } from "next/navigation";
+import {Room} from "@/app/types/room";
+// import {makeGetServerInsertedHTML} from "next/dist/server/app-render/make-get-server-inserted-html";
 
+const emptyForm = {
+    checkIn: "",
+    checkOut: "",
+    guests: 0
+}
 
 export default function SearchForm() {
     const today = getTodayString()
-    const [checkIn, setCheckIn] = useState('')
-    const [checkOut, setCheckOut] = useState('')
-    const [guests, setGuests] = useState('')
-    const [error, setError] = useState('')
+    const [form, setForm] = useState(emptyForm)
+    const [message, setMessage] = useState("")
+    const router = useRouter()
+
 
     // if (!checkIn || !checkOut) {
     //     setError('Select the check‑in and check‑out dates')
@@ -34,12 +41,56 @@ export default function SearchForm() {
     //     }
     // }, [checkIn, checkOut])
 
-    const handleSubmit = (e: React.FormEvent) => {
+    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
+        // const params = new URLSearchParams({
+        //     check_in: form.checkIn,
+        //     check_out: form.checkOut,
+        //     guests: String(form.guests)
+        // })
+
+        const url = new URL('/api/search', window.location.origin)
+        url.searchParams.set('check_in', form.checkIn);
+        url.searchParams.set('check_out', form.checkOut);
+        url.searchParams.set('guests', String(form.guests));
+
+        const res = await fetch(url.toString())
+        const data = await res.json()
+
+        // const response = await fetch(`/api/search?${params.toString()}`, {method: 'GET'})
+
+        // const data = await response.json()
+        // console.log(data.data, " data")
+
+        const ids = data.data.map((room: Room) => room.id)
+
+        if (!data.ok) {
+            setMessage("Search error")
+        }
+
+        const urlResults = new URL('/search', window.location.origin)
+        ids.forEach((id: string) => urlResults.searchParams.append('ids', id))
+        urlResults.searchParams.append('check_in', form.checkIn)
+        urlResults.searchParams.append('check_out', form.checkOut)
+        urlResults.searchParams.append('guests', String(form.guests))
+        router.push(urlResults.toString())
+
+        // router.push(`/server-page?items=${encodeURIComponent(param)}`)
+
+        // router.push({
+        //     pathname: '/search',
+        //     query: {
+        //        rooms: '234'
+        //     }
+        // })
+
+        router.refresh()
+
     }
 
     return (
-        <main className="px-4 py-3">
+        <main className="max-w-7xl mx-auto px-4 py-8">
             <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200  ">
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                     <div className="relative flex-1">
@@ -48,8 +99,8 @@ export default function SearchForm() {
                             type="date"
                             id="checkIn"
                             min={today}
-                            value={checkIn}
-                            onChange={(e) => setCheckIn(e.target.value)}
+                            value={form.checkIn}
+                            onChange={(e) => setForm({...form, checkIn: e.target.value})}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         />
@@ -59,9 +110,9 @@ export default function SearchForm() {
                         <input
                             type="date"
                             id="checkOut"
-                            min={checkIn || today}
-                            value={checkOut}
-                            onChange={(e) => setCheckOut(e.target.value)}
+                            min={form.checkIn || today}
+                            value={form.checkOut}
+                            onChange={(e) => setForm({...form, checkOut: e.target.value})}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         />
@@ -69,8 +120,8 @@ export default function SearchForm() {
                     <div className="relative flex-1">
                         <label htmlFor="guests">Guests</label>
                         <select id="guests"
-                                value={guests}
-                                onChange={(e) => setGuests(e.target.value)}
+                                value={form.guests}
+                                onChange={(e) => setForm({...form, guests: Number(e.target.value)})}
                                 className="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white"
                         >
                             {/*{[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n}</option>)}*/}
@@ -81,7 +132,7 @@ export default function SearchForm() {
                             <option value={5}>5+ guests</option>
                         </select>
                     </div>
-                    {error && <p>{error}</p>}
+                    {message && <p>{message}</p>}
 
 
                     <button
@@ -89,10 +140,6 @@ export default function SearchForm() {
                         className="w-full sm:w-auto bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md hover:shadow-blue-500/30 text-sm flex items-center justify-center gap-2"
                     >Find Rooms
                     </button>
-
-                    {/*{error && <p>{error}</p>}*/}
-
-                    {/*<button type="submit">Find Rooms</button>*/}
                 </form>
             </div>
         </main>
