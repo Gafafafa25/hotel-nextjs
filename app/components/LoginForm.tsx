@@ -24,8 +24,6 @@ export default function LoginForm() {
         })
         const data = await response.json()
 
-        console.log(data, "data")
-
         setForm(emptyForm)
         if (!data.ok) {
             setMessage("Login error")

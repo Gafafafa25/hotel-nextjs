@@ -19,7 +19,7 @@ export async function getAvailableRooms(checkIn: string, checkOut: string, guest
     return result.rows;
 }
 
-export async function getRoomsByIds(room_ids: number[]) {
+export async function getRoomsByIds(room_ids: number[] ) {
     const result = await pool.query(
         'SELECT * FROM rooms ' +
         'WHERE rooms.id = ANY($1)', [room_ids]

@@ -1,5 +1,6 @@
 import {Metadata} from "next";
 import SearchForm from "@/app/components/SearchForm";
+import BookingForm from "@/app/components/BookingForm";
 
 export const metadata: Metadata = {
   title: "Main",

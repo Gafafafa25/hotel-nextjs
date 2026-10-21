@@ -2,14 +2,13 @@
 
 import {FormEvent, useEffect, useState} from 'react'
 import {getTodayString} from "@/app/lib/search";
-import {useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 import {Room} from "@/app/types/room";
-// import {makeGetServerInsertedHTML} from "next/dist/server/app-render/make-get-server-inserted-html";
 
 const emptyForm = {
     checkIn: "",
     checkOut: "",
-    guests: 0
+    guests: 1
 }
 
 export default function SearchForm() {
@@ -91,7 +90,7 @@ export default function SearchForm() {
 
     return (
         <main className="max-w-7xl mx-auto px-4 py-8">
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200  ">
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                     <div className="relative flex-1">
                         <label htmlFor="checkIn">Check‑in date</label>
@@ -106,7 +105,7 @@ export default function SearchForm() {
                         />
                     </div>
                     <div className="relative flex-1">
-                        <label htmlFor="checkOut">Check-out date</label>
+                        <label htmlFor="checkOut" >Check-out date</label>
                         <input
                             type="date"
                             id="checkOut"
@@ -124,7 +123,6 @@ export default function SearchForm() {
                                 onChange={(e) => setForm({...form, guests: Number(e.target.value)})}
                                 className="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white"
                         >
-                            {/*{[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n}</option>)}*/}
                             <option value={1}>1 guest</option>
                             <option value={2}>2 guests</option>
                             <option value={3}>3 guests</option>
