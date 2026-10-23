@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     if (!guest) {
         guest = await addGuest(body.name, body.email, body.country, body.passport)
     }
-    await addReservation(Number(guest), Number(body.room), body.checkIn, body.checkOut)
+    const bookId = await addReservation(Number(guest), Number(body.room), body.checkIn, body.checkOut)
 
-    return NextResponse.json({guest: guest, ok: true})
+    return NextResponse.json({bookId: bookId, guestName: body.name, ok: true})
 }

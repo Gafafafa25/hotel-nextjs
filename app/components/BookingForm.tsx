@@ -2,20 +2,11 @@
 
 import {FormEvent, useEffect, useState} from "react";
 import {getTodayString} from "@/app/lib/search";
-import Image from "next/image";
-import {useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 
-// const emptyForm = {
-//     name: "",
-//     email: "",
-//     checkIn: "",
-//     checkOut: "",
-//     room: ""
-// }
 
 export default function BookingForm({check_in, check_out, room_id, room_name}:
                                         { check_in: string, check_out: string, room_id: string, room_name: string }) {
-// {check_in?: string, check_out?: string, room_id?: string, room_name: string}) {
 
 
     const today = getTodayString()
@@ -30,6 +21,7 @@ export default function BookingForm({check_in, check_out, room_id, room_name}:
     }
     const [form, setForm] = useState(emptyForm)
     const [message, setMessage] = useState("")
+    const router = useRouter()
 
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -49,8 +41,14 @@ export default function BookingForm({check_in, check_out, room_id, room_name}:
         } else {
             alert("Reservation ok")
             setForm(emptyForm)
+            const url = new URL('/booking/success', window.location.origin)
+            url.searchParams.append('book_id', data.bookId)
+            url.searchParams.append('check_in', check_in)
+            url.searchParams.append('check_out', check_out)
+            url.searchParams.append('name', data.guestName)
+            url.searchParams.append('room', room_name)
+            router.push(url.toString())
         }
-
     }
 
     return (

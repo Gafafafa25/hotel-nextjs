@@ -2,7 +2,7 @@ import {pool} from "@/app/lib/db";
 
 export async function hasGuest(name: string, passport: string) {
     const result = await pool.query('' +
-        'SELECT id FROM guests WHERE name=$1 AND email=$2', [name, passport]
+        'SELECT id FROM guests WHERE name=$1 AND passport=$2', [name, passport]
     )
     return result.rows[0]?.id
 }
