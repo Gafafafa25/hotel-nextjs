@@ -1,13 +1,16 @@
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image";
 import {siteConfig} from "@/config/site.config";
 import {layoutConfig} from "@/config/layout.config";
 import {getCurrentAdmin} from "@/app/lib/admin-auth";
 import LogoutButton from "@/app/components/LogoutButton";
+// import {getCurrentGuest} from "@/app/lib/guest";
 
 
 export default async function Header() {
     const admin = await getCurrentAdmin()
+    // const guest = await getCurrentGuest()
+
 
     const getNavItems = () => {
         return siteConfig.navItems.map((item) => {
@@ -26,12 +29,17 @@ export default async function Header() {
                         <span className="text-2xl font-bold text-indigo-600">{siteConfig.title}</span>
                     </Link>
                 </div>
-                <nav className="flex items-center gap-6"
-                     style={{height: `h-[${layoutConfig.headerHeight}]`}}>
-                    {getNavItems()}
+            <nav className="flex items-center gap-6"
+                 style={{height: `h-[${layoutConfig.headerHeight}]`}}>
+                {getNavItems()}
+                <Link
+                    href="/account"
+                    aria-label="lk"
+                    className="flex-shrink-0"
+                >LOGIN</Link>
 
-                    {admin && (<LogoutButton/>)}
-                </nav>
+                {admin && (<LogoutButton/>)}
+            </nav>
         </header>
     )
 }

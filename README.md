@@ -130,6 +130,7 @@ VALUES (
      'admin'
 )
 ```
+
 ```sql
 INSERT INTO staff_users (login, password, role)
 VALUES (
@@ -166,6 +167,7 @@ CREATE TABLE public.rooms (
 ```
 
 - quick search by index rooms_available
+
 ```sql
 CREATE INDEX idx_rooms_available ON rooms(is_available)
 ```
@@ -196,6 +198,7 @@ CREATE TABLE reservations (
 ```
 
 - quick search by index reservations
+
 ```sql
 CREATE INDEX idx_reservations ON reservations(check_in, check_out)
 ```
@@ -309,5 +312,84 @@ VALUES (
 )
 ```
 
+```sql
+ALTER TABLE guests
+ALTER COLUMN id TYPE BIGINT
+```
 
+```sql
+ALTER TABLE guests
+ADD COLUMN password text NOT NULL
+```
 
+```sql
+INSERT INTO guests (name, email, country, passport, password)
+VALUES (
+'Ivan',
+'ivan@mail.com',
+'Russia',
+'4500123456',
+crypt('ivan', gen_salt('bf'))
+)
+```
+
+```sql
+INSERT INTO guests (name, email, country, passport, password)
+VALUES (
+'Maria',
+'maria@yandex.ru',
+'Russia',
+'4500234567',
+crypt('maria', gen_salt('bf'))
+)
+```
+
+```sql
+INSERT INTO guests (name, email, country, passport, password)
+VALUES (
+'Aigul',
+'aigul@mail.kz',
+'Kazakhstan',
+'0001556677',
+crypt('aigul', gen_salt('bf'))
+)
+```
+
+```sql
+INSERT INTO reservations (guest_id, room_id, check_in, check_out)
+VALUES (
+34,
+1,
+'2026-12-10',
+'2026-12-12'
+)
+```
+
+```sql
+INSERT INTO reservations (guest_id, room_id, check_in, check_out)
+VALUES (
+35, 
+2,
+'2026-11-10',
+'2026-11-20'
+)
+```
+
+```sql
+INSERT INTO reservations (guest_id, room_id, check_in, check_out)
+VALUES (
+36, 
+3,
+'2026-12-03',
+'2026-12-05'
+)
+```
+
+```sql
+CREATE TABLE public.guests_sessions (
+token_hash text PRIMARY KEY,
+user_id BIGINT NOT NULL REFERENCES guests ON DELETE CASCADE,
+expires_at timestamptz NOT NULL,
+created_at timestamptz NOT NULL DEFAULT NOW()
+)
+```

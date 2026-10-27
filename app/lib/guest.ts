@@ -1,4 +1,21 @@
 import {pool} from "@/app/lib/db";
+import {createHash, randomBytes} from "node:crypto";
+import {cookies} from "next/headers";
+
+
+const COOKIE_NAME = 'guest_session'
+const SESSION_SECONDS = 60 * 60 * 1000
+
+type currentGuest = {
+    id: number,
+    email: string
+}
+
+type guestRow = currentGuest
+
+function hashToken(token: string) {
+    return createHash('sha256').update(token).digest('hex')
+}
 
 export async function hasGuest(name: string, passport: string) {
     const result = await pool.query('' +
@@ -7,6 +24,15 @@ export async function hasGuest(name: string, passport: string) {
     return result.rows[0]?.id
 }
 
+// export async function addGuest(name: string, email: string, country: string, passport: string) {
+//     const result = await pool.query('' +
+//         'INSERT INTO guests (name, email, country, passport) ' +
+//         'VALUES ($1, $2, $3, $4) ' +
+//         'RETURNING id', [name, email, country, passport]
+//     )
+//     return result.rows[0].id
+// }
+
 export async function addGuest(name: string, email: string, country: string, passport: string) {
     const result = await pool.query('' +
         'INSERT INTO guests (name, email, country, passport) ' +
@@ -14,4 +40,47 @@ export async function addGuest(name: string, email: string, country: string, pas
         'RETURNING id', [name, email, country, passport]
     )
     return result.rows[0].id
+}
+
+export async function authenticateGuest(email: string, password: string) {
+    const result = await pool.query('' +
+        'SELECT id, email, password FROM guests ' +
+        'WHERE email=$1 AND password=$2', [email, password])
+    return result.rows[0].id ?? null
+}
+
+export async function createGuestSession(userId: number) {
+    const token = randomBytes(32).toString('hex')
+    const token_hash = hashToken(token)
+    const expiresAt = new Date(Date.now() + SESSION_SECONDS * 1000)
+    await pool.query('INSERT INTO guests_sessions VALUES($1, $2, $3)', [token_hash, userId, expiresAt])
+    const cookieStore = await cookies()
+    cookieStore.set(COOKIE_NAME, token, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: SESSION_SECONDS,
+        expires: expiresAt
+    })
+}
+
+export async function getCurrentGuest() {
+    const token = (await cookies()).get(COOKIE_NAME)?.value
+    if (!token) return null
+    const result = await pool.query('SELECT guests.id, guests.email, guests.name ' +
+        'FROM guests.sessions AS sessions ' +
+        'JOIN guests ON guests.id = sessions.user_id ' +
+        'WHERE sessions.token_hash=$1 AND sessions.expiresAt > NOW()', [hashToken(token)]
+    )
+    return result.rows[0] ?? null
+}
+
+export async function deleteCurrentGuestSession() {
+    const cookie = await cookies()
+    const token = cookie.get(COOKIE_NAME)?.value
+    if (token) {
+        await pool.query('DELETE FROM guests WHERE token_hash=$1', [hashToken(token)])
+        cookie.delete(COOKIE_NAME)
+    }
 }
