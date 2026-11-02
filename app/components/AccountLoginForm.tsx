@@ -2,6 +2,7 @@
 
 import {FormEvent, useState} from "react";
 import {useRouter} from "next/navigation";
+import Link from "next/link";
 
 const emptyForm = {
     email: "",
@@ -24,12 +25,12 @@ export default function AccountLoginForm() {
         })
         const data = await response.json()
 
-        setForm(emptyForm)
         if (!data.ok) {
             setMessage("Login error")
             return
+        } else {
+            setForm(emptyForm)
         }
-        alert("login ok")
         router.refresh()
     }
 
@@ -39,7 +40,7 @@ export default function AccountLoginForm() {
                 <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200  w-full max-w-sm">
                     <h1 className="text-4xl font-bold text-gray-900 mb-6">Login</h1>
                     <form onSubmit={handleSubmit} className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Login
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email
                             <input type="text"
                                    value={form.email}
                                    onChange={(e) => {
@@ -66,6 +67,17 @@ export default function AccountLoginForm() {
                             Login
                         </button>
                     </form>
+
+                    <p className="mt-4 text-center text-sm text-gray-600">
+                        Don’t have an account?{' '}
+                        <Link
+                            href="/account/register"
+                            className="font-medium text-blue-600 hover:text-blue-800 underline"
+                        >
+                            Register
+                        </Link>
+                    </p>
+
                     <div>
                         <span>{message}</span>
                     </div>

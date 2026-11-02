@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
-import {addGuest, hasGuest} from "@/app/lib/guest";
-import addReservation from "@/app/lib/book";
+import {getCurrentGuest} from "@/app/lib/guest";
+import {addReservation} from "@/app/lib/book";
 
 export async function POST(request: Request) {
     let body: unknown;
@@ -22,11 +22,24 @@ export async function POST(request: Request) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error4"})
     }
 
-    let guest = await hasGuest(body.name, body.passport)
+    const guest = await getCurrentGuest()
     if (!guest) {
-        guest = await addGuest(body.name, body.email, body.country, body.passport)
+        return NextResponse.json({status: 400, statusText: "Internal Server Error5"})
     }
-    const bookId = await addReservation(Number(guest), Number(body.room), body.checkIn, body.checkOut)
+    // if (!guest) {
+    //     guest = await hasGuest(body.name, body.passport)
+    //     if (!guest) {
+    //         guest = await addGuest(body.name, body.email, body.country, body.passport)
+    //     }
+    // }
+    //else
+    // let guest = await hasGuest(body.name, body.passport)
+    // if (!guest) {
+    //     guest = await addGuest(body.name, body.email, body.country, body.passport)
+    // }
+    // const bookId = await addReservation(Number(guest), Number(body.room), body.checkIn, body.checkOut)
+    const bookId = await addReservation(Number(guest.id), Number(body.room), body.checkIn, body.checkOut)
 
     return NextResponse.json({bookId: bookId, guestName: body.name, ok: true})
+    // return NextResponse.json({bookId: bookId, guestName: body.name, ok: true})
 }

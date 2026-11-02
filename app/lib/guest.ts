@@ -8,10 +8,9 @@ const SESSION_SECONDS = 60 * 60 * 1000
 
 type currentGuest = {
     id: number,
-    email: string
+    email: string,
+    name: string
 }
-
-type guestRow = currentGuest
 
 function hashToken(token: string) {
     return createHash('sha256').update(token).digest('hex')
@@ -33,20 +32,21 @@ export async function hasGuest(name: string, passport: string) {
 //     return result.rows[0].id
 // }
 
-export async function addGuest(name: string, email: string, country: string, passport: string) {
+export async function addGuest(name: string, email: string, country: string, passport: string, password: string) {
     const result = await pool.query('' +
-        'INSERT INTO guests (name, email, country, passport) ' +
-        'VALUES ($1, $2, $3, $4) ' +
-        'RETURNING id', [name, email, country, passport]
+        'INSERT INTO guests (name, email, country, passport, password) ' +
+        'VALUES ($1, $2, $3, $4, crypt($5, gen_salt(\'bf\'))) ' +
+        'RETURNING id', [name, email, country, passport, password]
     )
     return result.rows[0].id
 }
 
 export async function authenticateGuest(email: string, password: string) {
     const result = await pool.query('' +
-        'SELECT id, email, password FROM guests ' +
-        'WHERE email=$1 AND password=$2', [email, password])
-    return result.rows[0].id ?? null
+        'SELECT id, name FROM guests ' +
+        'WHERE email=$1 AND password=crypt($2, password)', [email, password]
+    )
+    return result.rows[0]
 }
 
 export async function createGuestSession(userId: number) {
@@ -65,18 +65,18 @@ export async function createGuestSession(userId: number) {
     })
 }
 
-export async function getCurrentGuest() {
+export async function getCurrentGuest(): Promise<currentGuest | null> {
     const token = (await cookies()).get(COOKIE_NAME)?.value
     if (!token) return null
     const result = await pool.query('SELECT guests.id, guests.email, guests.name ' +
-        'FROM guests.sessions AS sessions ' +
+        'FROM guests_sessions AS sessions ' +
         'JOIN guests ON guests.id = sessions.user_id ' +
-        'WHERE sessions.token_hash=$1 AND sessions.expiresAt > NOW()', [hashToken(token)]
+        'WHERE sessions.token_hash=$1 AND sessions.expires_at > NOW()', [hashToken(token)]
     )
     return result.rows[0] ?? null
 }
 
-export async function deleteCurrentGuestSession() {
+export async function deleteCurrentGuestSession(): Promise<void> {
     const cookie = await cookies()
     const token = cookie.get(COOKIE_NAME)?.value
     if (token) {

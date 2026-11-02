@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {authenticateGuest} from "@/app/lib/guest";
+import {authenticateGuest, createGuestSession} from "@/app/lib/guest";
 
 export async function POST(request: Request) {
     let body: unknown
@@ -20,9 +20,13 @@ export async function POST(request: Request) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error4"})
     }
 
-    const user = authenticateGuest(body.email, body.password)
+    const user = await authenticateGuest(body.email, body.password)
+
     if (!user) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error5"})
     }
+
+    await createGuestSession(user.id)
+
     return NextResponse.json({email: body.email, ok: true})
 }

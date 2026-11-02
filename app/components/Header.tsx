@@ -4,12 +4,12 @@ import {siteConfig} from "@/config/site.config";
 import {layoutConfig} from "@/config/layout.config";
 import {getCurrentAdmin} from "@/app/lib/admin-auth";
 import LogoutButton from "@/app/components/LogoutButton";
-// import {getCurrentGuest} from "@/app/lib/guest";
+import {getCurrentGuest} from "@/app/lib/guest";
 
 
 export default async function Header() {
     const admin = await getCurrentAdmin()
-    // const guest = await getCurrentGuest()
+    const guest = await getCurrentGuest()
 
 
     const getNavItems = () => {
@@ -23,20 +23,28 @@ export default async function Header() {
 
     return (
         <header className="flex items-center justify-between px-6 py-4 bg-white border-b shadow-sm">
-                <div className="flex items-center gap-2">
-                    {/*<Image src="/images/logo.png" alt={siteConfig.title} width={200} height={200}/>*/}
-                    <Link href="/" className="flex-shrink-0">
-                        <span className="text-2xl font-bold text-indigo-600">{siteConfig.title}</span>
-                    </Link>
-                </div>
+            <div className="flex items-center gap-2">
+                {/*<Image src="/images/logo.png" alt={siteConfig.title} width={200} height={200}/>*/}
+                <Link href="/" className="flex-shrink-0">
+                    <span className="text-2xl font-bold text-indigo-600">{siteConfig.title}</span>
+                </Link>
+            </div>
             <nav className="flex items-center gap-6"
                  style={{height: `h-[${layoutConfig.headerHeight}]`}}>
                 {getNavItems()}
-                <Link
-                    href="/account"
-                    aria-label="lk"
-                    className="flex-shrink-0"
-                >LOGIN</Link>
+
+                {guest ? <Link
+                        href="/account/bookings"
+                        aria-label="bookings"
+                        className="flex-shrink-0 text-indigo-600"
+                    >{(guest.name).toUpperCase()}</Link>
+                    :
+                    <Link
+                        href="/account"
+                        aria-label="lk"
+                        className="flex-shrink-0 text-indigo-600"
+                    >LOGIN / REGISTER</Link>}
+
 
                 {admin && (<LogoutButton/>)}
             </nav>

@@ -31,7 +31,6 @@ export default function RegisterForm() {
         if (!data.ok) {
             setMessage("Register error")
         } else {
-            alert("registered user")
             setForm(emptyForm)
         }
 

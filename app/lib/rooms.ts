@@ -26,3 +26,11 @@ export async function getRoomsByIds(room_ids: number[] ) {
     )
     return result.rows;
 }
+
+export async function getRoom(room_id: number ) {
+    const result = await pool.query(
+        'SELECT * FROM rooms ' +
+        'WHERE id = $1', [room_id]
+    )
+    return result.rows
+}

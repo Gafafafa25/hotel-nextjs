@@ -2,16 +2,16 @@
 
 import {useState} from "react";
 import RegisterForm from "@/app/components/RegisterForm";
-import Link from "next/link";
+// import Link from "next/link";
 
 export default function AdminAccess() {
     const [showRegisterForm, setShowRegisterForm] = useState(true)
     const [showRooms, setShowRooms] = useState(false)
 
-    const navItems = [
-        {href: '/admin/functions', label: 'Регистрация функций', icon: '⚡'},
-        {href: '/admin/components', label: 'Компоненты продукта', icon: '📦'},
-    ];
+    // const navItems = [
+    //     {href: '/admin/functions', label: 'Регистрация функций', icon: '⚡'},
+    //     {href: '/admin/components', label: 'Компоненты продукта', icon: '📦'},
+    // ];
 
     return (
         <main>
