@@ -1,6 +1,6 @@
 "use client"
 
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent, useState} from "react";
 import {getTodayString} from "@/app/lib/search";
 import {useRouter} from "next/navigation";
 
@@ -11,10 +11,6 @@ export default function BookingForm({check_in, check_out, room_id, room_name}:
 
     const today = getTodayString()
     const emptyForm = {
-        name: "",
-        email: "",
-        country: "",
-        passport: "",
         checkIn: check_in || "",
         checkOut: check_out || "",
         room: room_id || ""
@@ -39,15 +35,14 @@ export default function BookingForm({check_in, check_out, room_id, room_name}:
         if (!data.ok) {
             setMessage("Reservation error")
         } else {
-            alert("Reservation ok")
-            setForm(emptyForm)
             const url = new URL('/booking/success', window.location.origin)
             url.searchParams.append('book_id', data.bookId)
-            url.searchParams.append('check_in', check_in)
-            url.searchParams.append('check_out', check_out)
+            url.searchParams.append('check_in', check_in ? check_in : form.checkIn)
+            url.searchParams.append('check_out', check_out ? check_out : form.checkOut)
             url.searchParams.append('name', data.guestName)
             url.searchParams.append('room', room_name)
             router.push(url.toString())
+            setForm(emptyForm)
         }
     }
 
@@ -57,62 +52,6 @@ export default function BookingForm({check_in, check_out, room_id, room_name}:
                 <h1 className="text-4xl font-bold text-gray-900 mb-6">Booking <span
                     className="text-blue-600">{room_name}</span> room</h1>
                 <form onSubmit={handleSubmit} className="space-y-2">
-                    <div className="relative flex-1">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Name:
-                            <input
-                                type="text"
-                                value={form.name}
-                                onChange={(e) => {
-                                    setForm({...form, name: e.target.value})
-                                }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
-                                required
-                            />
-                        </label>
-                    </div>
-
-                    <div className="relative flex-1">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email:
-                            <input
-                                type="email"
-                                value={form.email}
-                                onChange={(e) => {
-                                    setForm({...form, email: e.target.value})
-                                }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
-                                required
-                            />
-                        </label>
-                    </div>
-
-                    <div className="relative flex-1">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Country:
-                            <input
-                                type="text"
-                                value={form.country}
-                                onChange={(e) => {
-                                    setForm({...form, country: e.target.value})
-                                }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
-                                required
-                            />
-                        </label>
-                    </div>
-
-                    <div className="relative flex-1">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Passport:
-                            <input
-                                type="text"
-                                value={form.passport}
-                                onChange={(e) => {
-                                    setForm({...form, passport: e.target.value})
-                                }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
-                                required
-                            />
-                        </label>
-                    </div>
-
                     <div className="relative flex-1">
                         <label className="block text-sm font-medium text-gray-700 mb-1">Check in:
                             <input

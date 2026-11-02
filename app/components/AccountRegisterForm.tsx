@@ -19,9 +19,8 @@ export default function AccountRegisterForm() {
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        console.log(form, "form")
 
-        const response = await fetch("api/account/register", {
+        const response = await fetch("/api/account/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -29,19 +28,14 @@ export default function AccountRegisterForm() {
             body: JSON.stringify(form)
         })
         const data = await response.json()
-        console.log(data, " data")
 
         if (!data.ok) {
             setMessage("Register error")
         } else {
-            alert("registered user")
             setForm(emptyForm)
         }
 
-        // router.push('/account')
-
-
-        // router.back()
+        router.back()
         router.refresh()
     }
 

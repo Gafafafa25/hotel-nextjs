@@ -2,7 +2,6 @@ import {NextResponse} from "next/server";
 import {addGuest} from "@/app/lib/guest";
 
 export async function POST (request: Request) {
-    console.log("+++")
     let body: unknown
     try {
         body = await request.json();
@@ -21,11 +20,11 @@ export async function POST (request: Request) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error4"})
     }
 
-    const user = addGuest(body.name, body.email, body.country, body.passport, body.password)
+    const user = await addGuest(body.name, body.email, body.country, body.passport, body.password)
     if (!user) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error5"})
     }
-    console.log(user, " user")
+
     // await createGuestSession(user.id)
 
     return NextResponse.json({ok: true})

@@ -12,13 +12,11 @@ export async function POST(request: Request) {
     if (body === null || typeof body !== 'object') {
         return NextResponse.json({status: 400, statusText: "Internal Server Error2"})
     }
-    if (!("name" in body) || !("email" in body) || !("country" in body) || !("passport" in body) || !("checkIn" in body)
-        || !("checkOut" in body) || !("room" in body)) {
+
+    if ( !("checkIn" in body) || !("checkOut" in body) || !("room" in body)) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error3"})
     }
-    if (typeof body.name !== "string" || typeof body.email !== "string" || typeof body.country !== "string"
-        || typeof body.passport !== "string" || typeof body.checkIn !== "string" || typeof body.checkOut !== "string"
-        || typeof body.room !== "string") {
+    if (typeof body.checkIn !== "string" || typeof body.checkOut !== "string" || typeof body.room !== "string") {
         return NextResponse.json({status: 400, statusText: "Internal Server Error4"})
     }
 
@@ -26,20 +24,7 @@ export async function POST(request: Request) {
     if (!guest) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error5"})
     }
-    // if (!guest) {
-    //     guest = await hasGuest(body.name, body.passport)
-    //     if (!guest) {
-    //         guest = await addGuest(body.name, body.email, body.country, body.passport)
-    //     }
-    // }
-    //else
-    // let guest = await hasGuest(body.name, body.passport)
-    // if (!guest) {
-    //     guest = await addGuest(body.name, body.email, body.country, body.passport)
-    // }
-    // const bookId = await addReservation(Number(guest), Number(body.room), body.checkIn, body.checkOut)
     const bookId = await addReservation(Number(guest.id), Number(body.room), body.checkIn, body.checkOut)
 
-    return NextResponse.json({bookId: bookId, guestName: body.name, ok: true})
-    // return NextResponse.json({bookId: bookId, guestName: body.name, ok: true})
+    return NextResponse.json({bookId: bookId, guestName: guest.name, ok: true})
 }
