@@ -1,17 +1,53 @@
 import {FormEvent, useState} from "react";
+import {getErrorTypeLabel} from "next/dist/next-devtools/dev-overlay/container/errors";
+
+const AMENITIES_OPTIONS = [
+    "Wi-Fi",
+    "TV",
+    "Kitchen",
+    "Washing machine",
+    "Mini‑bar",
+    "Safe",
+    "Conditioner"
+]
 
 const emptyForm = {
-    name: ",",
+    roomNumber: "",
+    name: "",
     description: "",
     price: 0,
     maxGuests: 0,
-    image: ""
-    //todo: check
+    // image: "",
+    amenities: [] as string[]
 }
+
 
 export default function RoomForm() {
     const [form, setForm] = useState(emptyForm)
+    const [amenity, setAmenity] = useState("")
     const [message, setMessage] = useState("")
+
+    const toggleAmenity = (amenity: string) => {
+        setForm((prevForm) => {
+            const current = prevForm.amenities
+            if (current.includes(amenity)) {
+                return {...prevForm, amenities: current.filter(a => a !== amenity)}
+            }
+            return {...prevForm, amenities: [...current, amenity]}
+        })
+    }
+
+    const addAmenity = () => {
+        const value = amenity.trim()
+        if (!value) return
+
+        setForm({...form, amenities: [...form.amenities, value]})
+        setAmenity("")
+    }
+
+    const handleAmenityKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') addAmenity()
+    }
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -34,11 +70,112 @@ export default function RoomForm() {
     }
 
     return (
-        <div>
-            <h1>Add room</h1>
-            <form onSubmit={handleSubmit}>
+        <main className="mx-auto py-8">
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200  w-full max-w-sm">
+                <h1 className="text-4xl font-bold text-gray-900 mb-6">Room</h1>
+                <form onSubmit={handleSubmit} className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Room Number
+                        <input type="text"
+                               placeholder="001"
+                               value={form.roomNumber}
+                               onChange={(e) => {
+                                   setForm({...form, roomNumber: e.target.value})
+                               }}
+                               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               required
+                        />
+                    </label>
 
-            </form>
-        </div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Name
+                        <input type="text"
+                               value={form.name}
+                               onChange={(e) => {
+                                   setForm({...form, name: e.target.value})
+                               }}
+                               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               required
+                        />
+                    </label>
+
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description
+                        <input type="text"
+                               value={form.description}
+                               onChange={(e) => {
+                                   setForm({...form, description: e.target.value})
+                               }}
+                               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               required
+                        />
+                    </label>
+
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Price
+                        <input type="text"
+                               value={form.price}
+                               onChange={(e) => {
+                                   setForm({...form, price: Number(e.target.value)})
+                               }}
+                               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               required
+                        />
+                    </label>
+
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Max Guests
+                        <select id="guests"
+                                value={form.maxGuests}
+                                onChange={(e) => setForm({...form, maxGuests: Number(e.target.value)})}
+                                className="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white"
+                        >
+                            <option value={1}>1 guest</option>
+                            <option value={2}>2 guests</option>
+                            <option value={3}>3 guests</option>
+                            <option value={4}>4 guests</option>
+                            <option value={5}>5+ guests</option>
+                        </select>
+                    </label>
+
+                    {/*<label className="block text-sm font-medium text-gray-700 mb-1">Image*/}
+                    {/*    <input type="text"*/}
+                    {/*           value={form.image}*/}
+                    {/*           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"*/}
+                    {/*    />*/}
+                    {/*</label>*/}
+
+                    <div>
+                        <h3 className="block text-sm font-medium text-gray-700 mb-1">Amenities</h3>
+                        {AMENITIES_OPTIONS.map((amenity) =>
+                            <label key={amenity} className=" text-sm font-medium text-gray-700 mb-1">
+                                <input type="checkbox"
+                                       checked={form.amenities.includes(amenity)}
+                                       onChange={() => toggleAmenity(amenity)}
+                                />{amenity}
+                            </label>
+                        )}
+
+                        <p className="block text-sm font-medium text-gray-700 mb-1">Others:</p>
+                        <div className="flex gap-1 justify-end ">
+                            <input type="text"
+                                   value={amenity}
+                                   onChange={(e) => setAmenity(e.target.value)}
+                                   placeholder="Balcony, Terrace"
+                                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            />
+                            <button type="button"
+                                    onClick={addAmenity}
+                                    className="mx-auto p-3 border border-gray-300 rounded-lg hover:bg-gray-200
+                            transition-colors duration-200"
+                            >Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700
+                            transition-colors duration-200"
+                    >Add room
+                    </button>
+                </form>
+            </div>
+        </main>
     )
 }

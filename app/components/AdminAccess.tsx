@@ -2,6 +2,7 @@
 
 import {useState} from "react";
 import RegisterForm from "@/app/components/RegisterForm";
+import RoomForm from "@/app/components/RoomForm";
 // import Link from "next/link";
 
 export default function AdminAccess() {
@@ -34,6 +35,9 @@ export default function AdminAccess() {
             <div>
                 {showRegisterForm && (
                     <RegisterForm/>
+                )}
+                {showRooms && (
+                    <RoomForm/>
                 )}
             </div>
         </main>
