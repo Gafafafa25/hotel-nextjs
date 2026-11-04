@@ -156,6 +156,7 @@ export default function RoomForm() {
                             <input type="text"
                                    value={amenity}
                                    onChange={(e) => setAmenity(e.target.value)}
+                                   onKeyDown={handleAmenityKeyDown}
                                    placeholder="Balcony, Terrace"
                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
