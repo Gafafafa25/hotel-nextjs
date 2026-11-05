@@ -76,7 +76,7 @@ export default function RoomForm() {
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        console.log(form, "form")
+
         if (!files || files.length === 0) return
 
         const uploadsData = new FormData()
@@ -110,7 +110,6 @@ export default function RoomForm() {
         if (!data.ok) {
             setMessage("Addition error")
         } else {
-            alert("added room")
             setMessage("Addition success")
             setForm(emptyForm)
         }

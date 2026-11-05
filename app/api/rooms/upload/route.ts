@@ -6,7 +6,6 @@ import {mkdir, writeFile} from "node:fs/promises";
 
 export async function POST(request: Request) {
     let formData: FormData
-    console.log("!!!!!!!")
 
     try {
         formData = await request.formData()
@@ -15,7 +14,6 @@ export async function POST(request: Request) {
     }
 
     const files = formData.getAll('files') as File[]
-    console.log(files, " files")
 
     for (const file of files) {
         // if (!file.type.startsWith('image/')) {
@@ -35,7 +33,6 @@ export async function POST(request: Request) {
         const uploadsDir = join(process.cwd(), "uploadsDir")
 
         if (!existsSync(uploadsDir)) {
-            console.log("in dir")
             await mkdir(uploadsDir, {recursive: true})
         }
 
