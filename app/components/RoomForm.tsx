@@ -1,5 +1,4 @@
-import {FormEvent, useState} from "react";
-import {getErrorTypeLabel} from "next/dist/next-devtools/dev-overlay/container/errors";
+import {ChangeEvent, FormEvent, useRef, useState} from "react";
 
 const AMENITIES_OPTIONS = [
     "Wi-Fi",
@@ -11,21 +10,47 @@ const AMENITIES_OPTIONS = [
     "Conditioner"
 ]
 
+// const emptyForm = {
+//     roomNumber: "",
+//     name: "",
+//     description: "",
+//     price: 0,
+//     maxGuests: 0,
+//     image: "",
+//     amenities: [] as string[]
+// }
+
 const emptyForm = {
-    roomNumber: "",
+    room_number: "",
     name: "",
     description: "",
     price: 0,
     maxGuests: 0,
-    // image: "",
+    image: "",
     amenities: [] as string[]
 }
-
 
 export default function RoomForm() {
     const [form, setForm] = useState(emptyForm)
     const [amenity, setAmenity] = useState("")
+    const [files, setFiles] = useState<File[] | null>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null)
+
     const [message, setMessage] = useState("")
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return
+
+        if (e.target.files) {
+            setFiles(Array.from(e.target.files))
+        }
+
+        console.log('Files selected:', e.target.files.length)
+
+        Array.from(e.target.files).forEach(file => {
+            console.log('-', file.name, '(', file.size, 'byte)')
+        })
+    }
 
     const toggleAmenity = (amenity: string) => {
         setForm((prevForm) => {
@@ -51,22 +76,44 @@ export default function RoomForm() {
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        //todo:
+        console.log(form, "form")
+        if (!files || files.length === 0) return
 
-        // const response = await fetch('/admin/api/rooms', {
-        //     method: 'POST',
-        //     headers: {'Content-Type': 'application/json'},
-        //     body: JSON.stringify(form)
-        // })
-        //
-        // const data = await response.json()
-        //
-        // if(!data.ok) {
-        //     setMessage("Addition error")
-        // } else {
-        //     setMessage("Addition success")
-        //     setForm(emptyForm)
-        // }
+        const uploadsData = new FormData()
+
+
+        Array.from(files).forEach(file => {
+            uploadsData.append('files', file)
+        })
+
+        const uploadResponse = await fetch("/api/rooms/upload", {
+            method: "POST",
+            body: uploadsData
+        })
+
+        const uploadResult = await uploadResponse.json()
+
+        if (!uploadResult.ok) {
+            setMessage(uploadResult.error)
+        }
+
+        const response = await fetch("/api/rooms/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(form)
+        })
+
+        const data = await response.json()
+
+        if (!data.ok) {
+            setMessage("Addition error")
+        } else {
+            alert("added room")
+            setMessage("Addition success")
+            setForm(emptyForm)
+        }
     }
 
     return (
@@ -77,9 +124,9 @@ export default function RoomForm() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Room Number
                         <input type="text"
                                placeholder="001"
-                               value={form.roomNumber}
+                               value={form.room_number}
                                onChange={(e) => {
-                                   setForm({...form, roomNumber: e.target.value})
+                                   setForm({...form, room_number: e.target.value})
                                }}
                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                required
@@ -133,12 +180,21 @@ export default function RoomForm() {
                         </select>
                     </label>
 
-                    {/*<label className="block text-sm font-medium text-gray-700 mb-1">Image*/}
-                    {/*    <input type="text"*/}
-                    {/*           value={form.image}*/}
-                    {/*           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"*/}
-                    {/*    />*/}
-                    {/*</label>*/}
+
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Image
+                        <input type="file"
+                               multiple
+                               accept=".jpeg,.jpg,.png"
+                               ref={fileInputRef}
+                               onChange={handleChange}
+                               value={form.image}
+                               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                    </label>
+
+                    {files && (
+                        <div className="block text-sm font-medium text-gray-700 mb-1">Files selected: {files.length}</div>
+                    )}
 
                     <div>
                         <h3 className="block text-sm font-medium text-gray-700 mb-1">Amenities</h3>
@@ -152,12 +208,15 @@ export default function RoomForm() {
                         )}
 
                         <p className="block text-sm font-medium text-gray-700 mb-1">Others:</p>
+                        <p className="block text-sm font-medium text-gray-700 mb-1">
+                            {(form.amenities).filter((a) => !(AMENITIES_OPTIONS.includes(a))).join(", ")}
+                        </p>
                         <div className="flex gap-1 justify-end ">
                             <input type="text"
                                    value={amenity}
                                    onChange={(e) => setAmenity(e.target.value)}
                                    onKeyDown={handleAmenityKeyDown}
-                                   placeholder="Balcony, Terrace"
+                                   placeholder="Balcony"
                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                             <button type="button"
