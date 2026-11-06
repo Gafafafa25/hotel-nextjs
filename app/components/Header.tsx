@@ -5,12 +5,12 @@ import {layoutConfig} from "@/config/layout.config";
 import {getCurrentAdmin} from "@/app/lib/admin-auth";
 import LogoutButton from "@/app/components/LogoutButton";
 import {getCurrentGuest} from "@/app/lib/guest";
+import AccountLogoutButton from "@/app/components/AccountLogoutButton";
 
 
 export default async function Header() {
     const admin = await getCurrentAdmin()
     const guest = await getCurrentGuest()
-
 
     const getNavItems = () => {
         return siteConfig.navItems.map((item) => {
@@ -33,20 +33,29 @@ export default async function Header() {
                  style={{height: `h-[${layoutConfig.headerHeight}]`}}>
                 {getNavItems()}
 
-                {guest ? <Link
+                {admin ? <Link
                         href="/account/bookings"
                         aria-label="bookings"
-                        className="flex-shrink-0 text-indigo-600"
-                    >{(guest.name).toUpperCase()}</Link>
+                        className="flex-shrink-0"
+                    ><span className="flex-shrink-0 text-indigo-600">
+                        ACCESS {(admin.role).toUpperCase()} : </span>{(admin.login).toUpperCase()}</Link>
                     :
-                    <Link
-                        href="/account"
-                        aria-label="lk"
-                        className="flex-shrink-0 text-indigo-600"
-                    >LOGIN / REGISTER</Link>}
+                    guest ? <Link
+                            href="/account/bookings"
+                            aria-label="bookings"
+                            className="flex-shrink-0 text-indigo-600"
+                        >{(guest.name).toUpperCase()}</Link>
+                        :
+                        <Link
+                            href="/account"
+                            aria-label="lk"
+                            className="flex-shrink-0 text-indigo-600"
+                        >LOGIN / REGISTER</Link>
+                }
 
 
                 {admin && (<LogoutButton/>)}
+                {guest && (<AccountLogoutButton/>)}
             </nav>
         </header>
     )

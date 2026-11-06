@@ -12,7 +12,7 @@ type currentGuest = {
     name: string
 }
 
-function hashToken(token: string) {
+function hashToken(token: string): string {
     return createHash('sha256').update(token).digest('hex')
 }
 
@@ -49,11 +49,27 @@ export async function authenticateGuest(email: string, password: string) {
     return result.rows[0]
 }
 
+// export async function createGuestSession(userId: number) {
+//     const token = randomBytes(32).toString('hex')
+//     const token_hash = hashToken(token)
+//     const expiresAt = new Date(Date.now() + SESSION_SECONDS * 1000)
+//     await pool.query('INSERT INTO guests_sessions VALUES($1, $2, $3)', [token_hash, userId, expiresAt])
+//     const cookieStore = await cookies()
+//     cookieStore.set(COOKIE_NAME, token, {
+//         httpOnly: true,
+//         sameSite: "lax",
+//         secure: process.env.NODE_ENV === "production",
+//         path: "/",
+//         maxAge: SESSION_SECONDS,
+//         expires: expiresAt
+//     })
+// }
+
 export async function createGuestSession(userId: number) {
     const token = randomBytes(32).toString('hex')
     const token_hash = hashToken(token)
     const expiresAt = new Date(Date.now() + SESSION_SECONDS * 1000)
-    await pool.query('INSERT INTO guests_sessions VALUES($1, $2, $3)', [token_hash, userId, expiresAt])
+    await pool.query('INSERT INTO guests_sessions(token_hash, user_id, expires_at)  VALUES($1, $2, $3)', [token_hash, userId, expiresAt])
     const cookieStore = await cookies()
     cookieStore.set(COOKIE_NAME, token, {
         httpOnly: true,
@@ -64,6 +80,7 @@ export async function createGuestSession(userId: number) {
         expires: expiresAt
     })
 }
+
 
 export async function getCurrentGuest(): Promise<currentGuest | null> {
     const token = (await cookies()).get(COOKIE_NAME)?.value
@@ -77,10 +94,11 @@ export async function getCurrentGuest(): Promise<currentGuest | null> {
 }
 
 export async function deleteCurrentGuestSession(): Promise<void> {
+    console.log("------")
     const cookie = await cookies()
     const token = cookie.get(COOKIE_NAME)?.value
     if (token) {
-        await pool.query('DELETE FROM guests WHERE token_hash=$1', [hashToken(token)])
+        await pool.query('DELETE FROM guests_sessions WHERE token_hash=$1', [hashToken(token)])
         cookie.delete(COOKIE_NAME)
     }
 }

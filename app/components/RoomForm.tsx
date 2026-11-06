@@ -45,7 +45,7 @@ export default function RoomForm() {
             setFiles(Array.from(e.target.files))
         }
 
-        console.log('Files selected:', e.target.files.length)
+        // console.log('Files selected:', e.target.files.length)
 
         Array.from(e.target.files).forEach(file => {
             console.log('-', file.name, '(', file.size, 'byte)')
