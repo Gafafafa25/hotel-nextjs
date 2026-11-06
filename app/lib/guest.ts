@@ -49,22 +49,6 @@ export async function authenticateGuest(email: string, password: string) {
     return result.rows[0]
 }
 
-// export async function createGuestSession(userId: number) {
-//     const token = randomBytes(32).toString('hex')
-//     const token_hash = hashToken(token)
-//     const expiresAt = new Date(Date.now() + SESSION_SECONDS * 1000)
-//     await pool.query('INSERT INTO guests_sessions VALUES($1, $2, $3)', [token_hash, userId, expiresAt])
-//     const cookieStore = await cookies()
-//     cookieStore.set(COOKIE_NAME, token, {
-//         httpOnly: true,
-//         sameSite: "lax",
-//         secure: process.env.NODE_ENV === "production",
-//         path: "/",
-//         maxAge: SESSION_SECONDS,
-//         expires: expiresAt
-//     })
-// }
-
 export async function createGuestSession(userId: number) {
     const token = randomBytes(32).toString('hex')
     const token_hash = hashToken(token)
@@ -94,7 +78,6 @@ export async function getCurrentGuest(): Promise<currentGuest | null> {
 }
 
 export async function deleteCurrentGuestSession(): Promise<void> {
-    console.log("------")
     const cookie = await cookies()
     const token = cookie.get(COOKIE_NAME)?.value
     if (token) {
