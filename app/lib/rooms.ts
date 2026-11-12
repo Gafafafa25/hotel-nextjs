@@ -38,7 +38,6 @@ export async function getRoom(room_id: number) {
 export async function addRoom(room_number: string, name: string, description: string, price: number, maxGuests: number, image: string[], amenities: string[]) {
     const result = await pool.query('INSERT INTO rooms (room_number, name, description, price, max_guests, image, amenities) ' +
         'VALUES ($1, $2, $3, $4, $5, $6::text[], $7::text[]) ' +
-        // 'VALUES ($1, $2, $3, $4, $5, $6, $7::text[]) ' +
         'RETURNING *', [room_number, name, description, price, maxGuests, image, amenities]
     )
     return result.rows[0]
