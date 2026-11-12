@@ -12,7 +12,8 @@ export type Room = {
     description: string;
     price: number;
     maxGuests: number;
-    image: string;
+    image: string[];
+    // image: string;
     amenities: string[];
 }
 

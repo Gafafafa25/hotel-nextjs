@@ -37,7 +37,7 @@ export function RoomCard({room}: RoomCardProps) {
             className="border rounded-xl shadow-sm overflow-hidden bg-white hover:shadow-md transition-shadow duration-300">
             <div className="aspect-[4/3] overflow-hidden">
                 <Image
-                    src={room.image}
+                    src={room.image[0]}
                     alt={room.name}
                     width={200}
                     height={200}

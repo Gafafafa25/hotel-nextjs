@@ -15,6 +15,10 @@ export async function POST(request: Request) {
 
     const files = formData.getAll('files') as File[]
 
+    const fileNameBase = `${Date.now()}`
+    const filesNames = []
+    let fileNumber = 1
+
     for (const file of files) {
         // if (!file.type.startsWith('image/')) {
         const extension = file.type
@@ -29,7 +33,10 @@ export async function POST(request: Request) {
         // todo:
         // const fileName = `${file.name}-${extension}`
 
-        const fileName = `${Date.now()}.jpg`
+        const fileName = `${fileNameBase}_${fileNumber}.jpg`
+        fileNumber++
+        filesNames.push(fileName)
+
         const uploadsDir = join(process.cwd(), "uploadsDir")
 
         if (!existsSync(uploadsDir)) {
@@ -40,5 +47,6 @@ export async function POST(request: Request) {
 
         await writeFile(filePath, Buffer.from(await file.arrayBuffer()))
     }
-    return NextResponse.json({files: files, ok: true})
+    // return NextResponse.json({files: files, ok: true})
+    return NextResponse.json({files: files, ok: true, filesNames: filesNames})
 }

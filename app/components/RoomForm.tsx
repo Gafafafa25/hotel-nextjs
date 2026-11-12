@@ -1,4 +1,6 @@
 import {ChangeEvent, FormEvent, useRef, useState} from "react";
+import {serializeValidationErrorsToFlight} from "next/dist/server/app-render/dev-validation-error-delivery";
+import {Room} from "@/app/types/room";
 
 const AMENITIES_OPTIONS = [
     "Wi-Fi",
@@ -10,23 +12,13 @@ const AMENITIES_OPTIONS = [
     "Conditioner"
 ]
 
-// const emptyForm = {
-//     roomNumber: "",
-//     name: "",
-//     description: "",
-//     price: 0,
-//     maxGuests: 0,
-//     image: "",
-//     amenities: [] as string[]
-// }
-
 const emptyForm = {
     room_number: "",
     name: "",
     description: "",
     price: 0,
     maxGuests: 0,
-    image: "",
+    image: [] as string[],
     amenities: [] as string[]
 }
 
@@ -97,12 +89,24 @@ export default function RoomForm() {
             setMessage(uploadResult.error)
         }
 
+        const filesNames = uploadResult.filesNames
+
+        const room: Room = {
+            room_number: form.room_number,
+            name: form.name,
+            description: form.description,
+            price: form.price,
+            maxGuests: form.maxGuests,
+            image: filesNames as string[],
+            amenities: form.amenities
+        }
+
         const response = await fetch("/api/rooms/add", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(form)
+            body: JSON.stringify(room)
         })
 
         const data = await response.json()
@@ -192,7 +196,8 @@ export default function RoomForm() {
                     </label>
 
                     {files && (
-                        <div className="block text-sm font-medium text-gray-700 mb-1">Files selected: {files.length}</div>
+                        <div className="block text-sm font-medium text-gray-700 mb-1">Files
+                            selected: {files.length}</div>
                     )}
 
                     <div>

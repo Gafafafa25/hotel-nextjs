@@ -393,3 +393,10 @@ expires_at timestamptz NOT NULL,
 created_at timestamptz NOT NULL DEFAULT NOW()
 )
 ```
+
+```sql
+ALTER TABLE rooms
+ALTER COLUMN image
+TYPE text[]
+USING ARRAY[image::text]
+```

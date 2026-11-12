@@ -1,5 +1,6 @@
 import {NextResponse} from "next/server";
 import {addRoom} from "@/app/lib/rooms";
+import {typeOf} from "uri-js/dist/esnext/util";
 
 export async function POST(request: Request) {
     let body: unknown;
@@ -24,7 +25,8 @@ export async function POST(request: Request) {
 
     if (typeof body.room_number !== "string" || typeof body.name !== "string"
         || typeof body.description !== "string" || typeof body.price !== "number" || typeof body.maxGuests !== "number"
-        || typeof body.image !== "string" || !(Array.isArray(body.amenities))
+        || !(Array.isArray(body.image) || !(Array.isArray(body.amenities)) || !(body.image.every((img) => typeof img === "string")))
+        // || typeof body.image !== "string" || !(Array.isArray(body.amenities))
         || !(body.amenities.every((amenity) => typeof amenity === "string"))) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error4"})
     }
