@@ -6,14 +6,13 @@ export type BookedDateRange = {
 export type RoomType = 'standard' | 'deluxe' | 'family';
 
 export type Room = {
-    id: number;
+    id?: number;
     room_number: string;
     name: string;
     description: string;
     price: number;
     maxGuests: number;
     image: string[];
-    // image: string;
     amenities: string[];
 }
 
