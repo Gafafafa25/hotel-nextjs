@@ -14,12 +14,8 @@ export default async function bookingsPage() {
     const bookings = await getBookings(user.id)
     const roomIds = bookings.map(b => b.room_id)
 
-    // const bookings = await getBookings(user.id)
-    // const room = await getRoom(bookings[0].room_id)
-
     const rooms = await getRoomsByIds(roomIds)
     const roomsMap = new Map(rooms.map(r => [r.id, r]))
-
 
     return (
         <main>
@@ -29,7 +25,8 @@ export default async function bookingsPage() {
                 <div className="space-y-2 bg-gray-50 rounded-lg text-center">
                     {bookings.map((booking) => {
                         const room = roomsMap.get(booking.room_id)
-                        return <BookingCard key={booking.id} checkIn={booking.check_in} checkOut={booking.check_out} roomName={room.name} />
+                        return <BookingCard key={booking.id} checkIn={booking.check_in} checkOut={booking.check_out}
+                                            roomName={room.name} booked={booking.created_at} />
                     })}
                 </div>
             </section>

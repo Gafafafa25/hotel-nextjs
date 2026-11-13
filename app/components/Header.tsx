@@ -34,7 +34,7 @@ export default async function Header() {
                 {getNavItems()}
 
                 {admin ? <Link
-                        href="/account/bookings"
+                        href="/admin"
                         aria-label="bookings"
                         className="flex-shrink-0"
                     ><span className="flex-shrink-0 text-indigo-600">

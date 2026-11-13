@@ -3,16 +3,14 @@
 import {useState} from "react";
 import RegisterForm from "@/app/components/RegisterForm";
 import RoomForm from "@/app/components/RoomForm";
+// import BookingsList from "@/app/components/BookingsList";
 // import Link from "next/link";
+
 
 export default function AdminAccess() {
     const [showRegisterForm, setShowRegisterForm] = useState(true)
     const [showRooms, setShowRooms] = useState(false)
-
-    // const navItems = [
-    //     {href: '/admin/functions', label: 'Регистрация функций', icon: '⚡'},
-    //     {href: '/admin/components', label: 'Компоненты продукта', icon: '📦'},
-    // ];
+    const [showBookings, setShowBookings] = useState(false)
 
     return (
         <main>
@@ -22,6 +20,7 @@ export default function AdminAccess() {
                     onClick={() => {
                         setShowRegisterForm(!showRegisterForm)
                         setShowRooms(false)
+                        setShowBookings(false)
                     }}>Add user
                 </button>
                 <button
@@ -29,7 +28,18 @@ export default function AdminAccess() {
                     onClick={() => {
                         setShowRooms(!showRooms)
                         setShowRegisterForm(false)
+                        setShowBookings(false)
                     }}>Add room
+                </button>
+                <button
+                    type="button"
+                    onClick={() => {
+                        setShowBookings(!showBookings)
+                        setShowRegisterForm(false)
+                        setShowRooms(false)
+                    }}
+                >
+                    Bookings
                 </button>
             </div>
             <div>
@@ -39,6 +49,9 @@ export default function AdminAccess() {
                 {showRooms && (
                     <RoomForm/>
                 )}
+                {/*{showBookings && (*/}
+                {/*    <BookingsList/>*/}
+                {/*)}*/}
             </div>
         </main>
     )
