@@ -7,10 +7,8 @@ export default async function AdminLayout({children}: { children: React.ReactNod
     const admin = await getCurrentAdmin()
 
     if (!admin) {
-        redirect('/admin/login')
-        // redirect('/admin')
-        // return <LoginForm/>
-        // return
+        // redirect('/admin/login') //error
+        return <LoginForm/>
     }
 
     if (admin.role !== 'admin') {

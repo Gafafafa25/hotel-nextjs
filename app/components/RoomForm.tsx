@@ -200,10 +200,10 @@ export default function RoomForm() {
                             selected: {files.length}</div>
                     )}
 
-                    <div>
+                    <div className="space-y-3">
                         <h3 className="block text-sm font-medium text-gray-700 mb-1">Amenities</h3>
                         {AMENITIES_OPTIONS.map((amenity) =>
-                            <label key={amenity} className=" text-sm font-medium text-gray-700 mb-1">
+                            <label key={amenity} className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
                                 <input type="checkbox"
                                        checked={form.amenities.includes(amenity)}
                                        onChange={() => toggleAmenity(amenity)}

@@ -2,8 +2,8 @@ import Link from "next/link";
 
 const allNavItems = [
     {label: 'Employees', href: '/admin/employees', roles: ['admin']},
-    {label: 'Rooms', href: '/admin/rooms', roles: ['admin']},
-    {label: 'Bookings', href: '/admin/bookings', roles: ['admin']}
+    {label: 'Rooms', href: '/admin/rooms', roles: ['admin', 'manager']},
+    {label: 'Bookings', href: '/admin/bookings', roles: ['admin', 'manager', 'intern']}
 ]
 
 export default function Sidebar({role}: {role: string}) {

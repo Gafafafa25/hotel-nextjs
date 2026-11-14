@@ -1,9 +1,10 @@
 import {NextResponse} from "next/server";
 import {addRoom} from "@/app/lib/rooms";
-import {typeOf} from "uri-js/dist/esnext/util";
+import {Room} from "@/app/types/room";
 
 export async function POST(request: Request) {
     let body: unknown;
+    // let body: Room;
 
     try {
         body = await request.json();
