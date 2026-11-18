@@ -1,5 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [
+## About
+- This is a hotel app. Guests can search, filter by dates/prices/amenities, view the room card, and book rooms. For the administrator, there is a dashboard with bookings and their management, as well as the ability to add rooms and staff.
+
+## You need:
+- Node.js
+- npm
+- PostgreSQL
+- docker
+
+## Design
+- Tailwind CSS
+
+## How to create project:
+- This is a [Next.js](https://nextjs.org) project bootstrapped with [
 `create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+
+```bash
+npx create-next-app@latest hotel-nextjs
+```
+
+## Project includes:
+- Admin Panel
+- Account
+- Booking
+- Search
+
+## Steps:
+
+### Run docker container and create db
+
+```bash
+docker run --name hotelnextjs-pg-container \
+  -e POSTGRES_USER=hotelUser \
+  -e POSTGRES_PASSWORD=hotelSecret \
+  -e POSTGRES_DB=hotel-nextjs \
+  -p 5433:5432 \
+  -d postgres
+```
+
+### Create .env.local with DATABASE_URL
+```
+DATABASE_URL=postgresql://userName:userPassword@localhost:5433/hotel-nextjs
+```
+
+### Open DBeaver and create tables (SQL.md):
+- guests
+- guests_sessions
+- reservations
+- rooms
+- staff_users
+- staff_sessions
 
 ## Getting Started
 
@@ -40,53 +90,6 @@ from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for
 more details.
-
-## You need:
-- Node.js
-- npm
-- PostgreSQL
-- docker
-
-## Design
-- Tailwind CSS
-
-## How to create project:
-
-```bash
-npx create-next-app@latest hotel-nextjs
-```
-
-## Project includes:
-- Admin Panel
-- Account
-- Booking
-- Search
-
-## Steps:
-
-### Run docker container and create db
-
-```bash
-docker run --name hotelnextjs-pg-container \
-  -e POSTGRES_USER=hotelUser \
-  -e POSTGRES_PASSWORD=hotelSecret \
-  -e POSTGRES_DB=hotel-nextjs \
-  -p 5433:5432 \
-  -d postgres
-```
-
-### Create .env.local with DATABASE_URL
-```
-DATABASE_URL=postgresql://userName:userPassword@localhost:5433/hotel-nextjs
-```
-
-### Open DBeaver and create tables (SQL.md):
-- guests
-- guests_sessions
-- reservations
-- rooms
-- staff_users
-- staff_sessions
 
 
 

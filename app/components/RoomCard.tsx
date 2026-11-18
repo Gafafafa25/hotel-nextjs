@@ -50,7 +50,7 @@ export function RoomCard({room}: RoomCardProps) {
             </div>
             <div className="flex flex-col flex-1 p-5">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{room.name}</h3>
-                <span className="font-bold text-indigo-600 text-lg">{room.price.toLocaleString('ru-RU')}₽ / night</span>
+                <span className="font-bold text-indigo-600 text-lg">{(room.price.toLocaleString('ru-RU').slice(0, -3))}₽ / night</span>
                 <div className="flex items-center justify-between mb-3">
                     <span className="text-sm text-gray-500 uppercase tracking-wide">{room.description}</span>
                 </div>
