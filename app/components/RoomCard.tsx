@@ -54,7 +54,7 @@ export function RoomCard({room}: RoomCardProps) {
                 <div className="flex items-center justify-between mb-3">
                     <span className="text-sm text-gray-500 uppercase tracking-wide">{room.description}</span>
                 </div>
-                <p className="text-gray-600 mb-4 line-clamp-2">{room.amenities.join(", ")}</p>
+                <p className="flex flex-col h-full text-gray-600 mb-4 line-clamp-2">{room.amenities.join(", ")}</p>
                 <button
                     type="button"
                     onClick={handleBook}
