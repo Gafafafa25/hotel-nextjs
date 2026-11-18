@@ -14,8 +14,6 @@ export default async function RoomsPage() {
     // const [filterType, setFilterType] = React.useState<RoomType | ''>('')
     //todo: filter
     const filteredRooms = await getRooms()
-    console.log(filteredRooms)
-    // console.log(filteredRooms, "filteredRooms")
 
     // const filteredRooms = filterType === '' ?
     //     roomsData : roomsData.filter(room => room.name === filterType)

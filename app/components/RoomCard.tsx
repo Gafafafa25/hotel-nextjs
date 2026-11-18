@@ -36,9 +36,6 @@ export function RoomCard({room}: RoomCardProps) {
     const fileName = room.image[0]
     const fullUrl = baseUrl + fileName
 
-    console.log(fullUrl, " fullUrl")
-    console.log(room, " cur room")
-
     return (
         <article
             className="flex flex-col gap-4 w-full h-full max-w-xs border rounded-xl shadow-sm overflow-hidden bg-white hover:shadow-md transition-shadow duration-300">
