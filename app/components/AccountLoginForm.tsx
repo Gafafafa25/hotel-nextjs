@@ -16,7 +16,7 @@ export default function AccountLoginForm() {
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        const response = await fetch("api/account/login", {
+        const response = await fetch("/api/account/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

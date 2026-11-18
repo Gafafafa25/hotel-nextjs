@@ -76,6 +76,7 @@ export default function RoomForm() {
 
         Array.from(files).forEach(file => {
             uploadsData.append('files', file)
+            uploadsData.append('names', file.name)
         })
 
         const uploadResponse = await fetch("/api/rooms/upload", {

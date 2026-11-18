@@ -30,14 +30,12 @@ export async function POST(request: Request) {
                 {error: `File ${(file as File).name} is too large and will not be attached. `}, {status: 400}
             )
         }
-        // todo:
-        // const fileName = `${file.name}-${extension}`
 
-        const fileName = `${fileNameBase}_${fileNumber}.jpg`
+        const fileName = `r${fileNameBase}_${fileNumber}.jpg`
         fileNumber++
         filesNames.push(fileName)
 
-        const uploadsDir = join(process.cwd(), "uploadsDir")
+        const uploadsDir = join(process.cwd(), "public", "uploadsDir")
 
         if (!existsSync(uploadsDir)) {
             await mkdir(uploadsDir, {recursive: true})
@@ -47,6 +45,5 @@ export async function POST(request: Request) {
 
         await writeFile(filePath, Buffer.from(await file.arrayBuffer()))
     }
-    // return NextResponse.json({files: files, ok: true})
     return NextResponse.json({files: files, ok: true, filesNames: filesNames})
 }

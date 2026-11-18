@@ -18,7 +18,7 @@ export default function RegisterForm() {
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
 
-        const response = await fetch("api/admin/register", {
+        const response = await fetch("/api/admin/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

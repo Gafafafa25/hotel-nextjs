@@ -31,6 +31,7 @@ export async function POST(request: Request) {
         || !(body.amenities.every((amenity) => typeof amenity === "string"))) {
         return NextResponse.json({status: 400, statusText: "Internal Server Error4"})
     }
+
     const room = await addRoom(body.room_number, body.name, body.description, body.price, body.maxGuests,
         body.image, body.amenities)
 

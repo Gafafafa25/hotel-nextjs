@@ -3,12 +3,14 @@ import {redirect} from "next/navigation";
 import Sidebar from "@/app/components/Sidebar";
 import LoginForm from "@/app/components/LoginForm";
 
+// export const dynamic = 'force-dynamic'
+
 export default async function AdminLayout({children}: { children: React.ReactNode }) {
     const admin = await getCurrentAdmin()
 
     if (!admin) {
-        // redirect('/admin/login') //error
-        return <LoginForm/>
+        redirect('/admin/login') //error
+        // return <LoginForm/>
     }
 
     if (admin.role !== 'admin') {
